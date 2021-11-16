@@ -2,7 +2,7 @@
 
 namespace Xbugszone\Cryptotools\Brokers;
 
-class Broker
+abstract class Broker
 {
 
 }
