@@ -1,0 +1,19 @@
+{
+    "name": "xbugszone/cryptotools",
+    "description": "Framework with tools to trade cryptocurrency",
+    "autoload": {
+        "psr-4": {
+            "Xbugszone\\Cryptotools\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "tiago",
+            "email": "xbugszone@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "ccxt/ccxt": "^1.60"
+    }
+}
