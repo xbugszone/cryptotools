@@ -15,5 +15,7 @@
     "require": {
         "php": "^8.0",
         "ccxt/ccxt": "^1.60"
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
