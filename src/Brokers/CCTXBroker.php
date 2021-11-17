@@ -2,26 +2,23 @@
 
 namespace Xbugszone\Cryptotools\Brokers;
 
-use Xbugszone\Cryptotools\Utils\Structs\Ticker;
-use ccxt\bitstamp as ccxtBitstamp;
+use ccxt\bitstamp;
 use Xbugszone\Cryptotools\Interfaces\BrokerInterface;
+use Xbugszone\Cryptotools\Utils\Structs\Ticker;
 
-class Bitstamp extends Broker implements BrokerInterface
+class CCTXBroker extends Broker implements BrokerInterface
 {
-    /**
-     * @var ccxtBitstamp
-     */
-    private $exchange;
 
-    /**
-     * @throws \ccxt\ExchangeError
-     */
+    protected $exchange;
+
     public function __construct()
     {
-        $this->exchange = new ccxtBitstamp(array(
+        /**
+        $this->exchange = new bitstamp(array(
             'apiKey' => env("BITSTAMP_API_KEY"),
             'secret' => env('BITSTAMP_API_SECRET'),
         ));
+         **/
     }
 
     /**
@@ -74,5 +71,4 @@ class Bitstamp extends Broker implements BrokerInterface
         }
         return $candles;
     }
-
 }
