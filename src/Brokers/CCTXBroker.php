@@ -42,12 +42,24 @@ class CCTXBroker extends Broker implements BrokerInterface
     public function __construct()
     {
 
-        $this->broker = new $this->exchange(array(
-            'apiKey' => $this->apiKey,
-            'secret' => $this->apiSecret,
-        ));
+        if (isset($this)) {
+            $this->broker = new $this->exchange(array(
+                'apiKey' => $this->apiKey,
+                'secret' => $this->apiSecret,
+            ));
+        }
 
     }
+
+    public function getMarkets() {
+        $marketsApi = $this->broker->fetch_markets();
+        $listMarkets = [];
+        foreach ($marketsApi as $market) {
+            $listMarkets[] = $market['symbol'];
+        }
+        return $listMarkets;
+    }
+
 
     /**
      * Get the account balance from the broker
