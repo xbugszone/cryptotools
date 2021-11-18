@@ -2,42 +2,63 @@
 
 namespace Xbugszone\Cryptotools\Brokers;
 
-use Xbugszone\Cryptotools\Utils\Structs\Order;
-use Illuminate\Support\Facades\Storage;
 use Xbugszone\Cryptotools\Interfaces\BrokerInterface;
 
+/**
+ * This Simulator needs a broker in order to work
+ * To get the max of the simulation this simulator go get real data from a chosen exchange.
+ * The queries will be real data and the actions (getBalance, createOrder, getOpenOrders, etc) will be simulated
+ */
 class Simulator extends Broker implements BrokerInterface
 {
-    public $tickerIdx;
-    private $orders;
-    public function __construct() {
-        $this->tickerIdx = 0;
-    }
-    public function getBalance()
-    {
-        return json_decode(Storage::disk('simulator')->get('balance.json'));
+    /**
+     * The broker to get real data
+     * @var Broker
+     */
+    protected Broker $broker;
+
+    /**
+     * Balance when starting the simulator
+     * @var array
+     */
+    protected array $balance;
+
+    /**
+     * The exchange Broker
+     * @param Broker $broker
+     */
+    public function setBroker(Broker $broker) {
+        $this->broker = $broker;
     }
 
-    public function getTicker($symbol)
+    public function getBalance(): array
     {
-        $tickers = $this->getTickers($symbol,'1d',null,1000);
-        return $tickers[$this->tickerIdx++];
+        return $this->balance;
     }
 
-    public function getTickers($symbol,$timeframe,$since,$limit)
+    public function getMarkets(): array
     {
-        return json_decode(Storage::disk('simulator')->get('tickers'.$symbol.'_'.$timeframe.'_'.$limit.'.json'));
+        return $this->broker->getMarkets();
     }
 
-    public function getOpenOrders()
+    public function getTicker($pair): array
     {
-        return $this->orders;
+        return $this->broker->getTicker($pair);
     }
 
-    public function createOrder($symbol, $type, $side, $amount, $price)
+    public function getTickers($pair, $timeframe, $since, $limit): array
     {
-        $order = new Order(["symbol" => $symbol, "type" => $type, "side" => $side, "amount" => $amount, "price" => $price]);
-        $this->orders[] = new Order(["symbol" => $symbol, "type" => $type, "side" => $side, "amount" => $amount, "price" => $price]);
-        return $order;
+        return $this->broker->getTickers($pair, $timeframe, $since, $limit);
+    }
+
+    public function getOpenOrders() : array
+    {
+        // TODO: Implement getOpenOrders() method.
+        return [];
+    }
+
+    public function createOrder($pair, $type, $side, $amount, $price)
+    {
+        // TODO: Implement createOrder() method.
     }
 }

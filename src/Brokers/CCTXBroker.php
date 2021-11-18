@@ -3,7 +3,6 @@
 namespace Xbugszone\Cryptotools\Brokers;
 
 use Xbugszone\Cryptotools\Interfaces\BrokerInterface;
-use Xbugszone\Cryptotools\Utils\Structs\Ticker;
 
 class CCTXBroker extends Broker implements BrokerInterface
 {
@@ -51,7 +50,7 @@ class CCTXBroker extends Broker implements BrokerInterface
 
     }
 
-    public function getMarkets() {
+    public function getMarkets() : array {
         $marketsApi = $this->broker->fetch_markets();
         $listMarkets = [];
         foreach ($marketsApi as $market) {
@@ -83,10 +82,10 @@ class CCTXBroker extends Broker implements BrokerInterface
      * @param $symbol
      * @return array
      */
-    public function getTicker($pair) {
+    public function getTicker($pair) : array {
         return $this->broker->fetch_ticker($pair);
     }
-    public function getOpenOrders() {
+    public function getOpenOrders() : array {
         return $this->broker->fetch_open_orders();
     }
 
@@ -94,20 +93,20 @@ class CCTXBroker extends Broker implements BrokerInterface
         //print_r($this->exchange->sell($crypto['coin'], 'trade', 'sell', $crypto['value'], $ticker['last']));
         return $this->broker->create_order($pair, $type, $side, $amount, $price);
     }
-    public function getTickers($pair,$timeframe,$since,$limit)
+    public function getTickers($pair,$timeframe,$since,$limit) : array
     {
         $ohlcvs = $this->broker->fetch_ohlcv($pair, $timeframe, $since, $limit);
         $candles = [];
         foreach ($ohlcvs as $ohlcv) {
-            $ticker = new Ticker([
+            $ticker = [
                 "symbol" => $pair,
                 "timestamp" => $ohlcv[0],
                 "open" => $ohlcv[1],
                 "high" => $ohlcv[2],
                 "low" => $ohlcv[3],
                 "close" => $ohlcv[4],
-            ]);
-            $candles[] = json_decode($ticker->getData(),true);
+            ];
+            $candles[] = $ticker;
         }
         return $candles;
     }
