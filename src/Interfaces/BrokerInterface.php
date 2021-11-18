@@ -5,6 +5,7 @@ namespace Xbugszone\Cryptotools\Interfaces;
 interface BrokerInterface
 {
     public function getBalance();
+    public function getMarkets();
     public function getTicker($pair);
     public function getTickers($pair,$timeframe,$since,$limit);
     public function getOpenOrders();

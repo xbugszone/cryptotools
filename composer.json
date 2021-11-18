@@ -1,6 +1,9 @@
 {
     "name": "xbugszone/cryptotools",
+    "type": "package",
     "description": "Framework with tools to trade cryptocurrency",
+    "keywords": [],
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Xbugszone\\Cryptotools\\": "src/"
