@@ -2,42 +2,36 @@
 
 namespace Xbugszone\Cryptotools\Models;
 
+
 use Xbugszone\Cryptotools\Brokers\Broker;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Account extends Model
+class Account
 {
-    use HasFactory;
-
     /**
-     * Stores the balances of this account
+     * Array with coins and values
      * @var array
      */
     protected array $balance;
 
     /**
-     * Stores the trades of this account
+     * Array with market pairs available on exchange
      * @var array
      */
-    protected array $trades;
+    protected array $markets;
 
     /**
-     * @param array $attributes
+     * Array of open orders for this account
+     * @var array
      */
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-    }
+    protected array $openOrders;
 
     /**
-     * Get the needed info from the broker related to my account
+     * Populate the Account with data from the exchange
      * @param Broker $broker
      */
-    public function createAccount(Broker $broker) : Account
-    {
-        $balance = $broker->getBalance();
-        $this->balance = $balance;
-        return $this;
+    public function fetchData(Broker $broker) {
+        $this->balance = $broker->getBalance();
+        $this->markets = $broker->getMarkets();
+        $this->openOrders = $broker->getOpenOrders();
     }
 }
