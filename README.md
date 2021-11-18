@@ -51,6 +51,15 @@
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -75,6 +84,79 @@ CryptoFramework is a framework intended to easily create bots to manage cryptocu
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+To get started you can use as base a framework like laravel or symfony but for this example I will use it in a blank project 
+
+### Prerequisites
+
+This is an example of how to list things you need to use the software and how to install them.
+* composer blank project
+  ```sh
+  composer init
+  ```
+
+### Installation
+1. install package in the blank project folder
+```sh
+composer require xbugszone/cryptotools
+```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+<!-- USAGE EXAMPLES -->
+## Usage
+
+1. Create a folder called Brokers in your project and with a file inside, for this example we will use the Bitstamp exchange so lets call this file MyBitstamp.php
+   In this file should be this code
+```php
+namespace App\Brokers;
+
+use ccxt\bitstamp;
+use Xbugszone\Cryptotools\Brokers\CCTXBroker;
+
+class MyBitstamp extends CCTXBroker
+{
+protected string $exchange = bitstamp::class;
+protected string $apiKey = "your api key";
+protected string $apiSecret = "your api secret";
+}
+
+   ```
+2. Get the API Key from the selected exchange and update on the file
+
+3. Now to run this app we create a file inside our project but outside of the Brokers folder and we can call it run.php with the following code:
+```php
+<?php
+
+namespace App\Console\Commands;
+
+use App\Brokers\MyBitstamp;
+$broker = new MyBitstamp();
+print_r($broker->getBalance());
+
+   ```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+<!-- ROADMAP -->
+## Roadmap
+
+- [] Brokers automatic stubs
+- [] Signals
+- [] Strategies
+    - [] Bot squeleton stubs
+    
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
 
 
 <!-- CONTRIBUTING -->

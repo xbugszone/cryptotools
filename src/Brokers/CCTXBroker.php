@@ -2,23 +2,51 @@
 
 namespace Xbugszone\Cryptotools\Brokers;
 
-use ccxt\bitstamp;
 use Xbugszone\Cryptotools\Interfaces\BrokerInterface;
 use Xbugszone\Cryptotools\Utils\Structs\Ticker;
 
 class CCTXBroker extends Broker implements BrokerInterface
 {
 
-    protected $exchange;
+    /**
+     * Var that bridge the brokers with the ccxt exchanges
+     * @var mixed
+     */
+    protected mixed $broker;
 
+    /**
+     * The exchange Class
+     * To know if your exchange is supported by ccxt and how to use it
+     * https://github.com/ccxt/ccxt/wiki/Exchange-Markets
+     * @var string|mixed
+     */
+    protected string $exchange;
+
+    /**
+     * The Api Key
+     * The Api Key for your exchange service
+     * @var string
+     */
+    protected string $apiKey;
+
+    /**
+     * The Api Secret
+     * The Api Secret for your exchange service
+     * @var string
+     */
+    protected string $apiSecret;
+
+    /**
+     * @throws \Exception
+     */
     public function __construct()
     {
-        /**
-        $this->exchange = new bitstamp(array(
-            'apiKey' => env("BITSTAMP_API_KEY"),
-            'secret' => env('BITSTAMP_API_SECRET'),
+
+        $this->broker = new $this->exchange(array(
+            'apiKey' => $this->apiKey,
+            'secret' => $this->apiSecret,
         ));
-         **/
+
     }
 
     /**
@@ -26,7 +54,7 @@ class CCTXBroker extends Broker implements BrokerInterface
      * Array(..., [BTC] => Array ([total] => 0.00343618, [free] => 0.00343618, [used] => 0, ...)
      */
     public function getBalance() : array {
-        $balance = $this->exchange->fetch_balance();
+        $balance = $this->broker->fetch_balance();
         $accountBalance = [];
         foreach ($balance['total'] as $coinName => $coinValue ) {
             if($coinValue != 0) {
@@ -44,19 +72,19 @@ class CCTXBroker extends Broker implements BrokerInterface
      * @return array
      */
     public function getTicker($pair) {
-        return $this->exchange->fetch_ticker($pair);
+        return $this->broker->fetch_ticker($pair);
     }
     public function getOpenOrders() {
-        return $this->exchange->fetch_open_orders();
+        return $this->broker->fetch_open_orders();
     }
 
     public function createOrder($pair, $type, $side, $amount, $price ) {
         //print_r($this->exchange->sell($crypto['coin'], 'trade', 'sell', $crypto['value'], $ticker['last']));
-        return $this->exchange->create_order($pair, $type, $side, $amount, $price);
+        return $this->broker->create_order($pair, $type, $side, $amount, $price);
     }
     public function getTickers($pair,$timeframe,$since,$limit)
     {
-        $ohlcvs = $this->exchange->fetch_ohlcv($pair, $timeframe, $since, $limit);
+        $ohlcvs = $this->broker->fetch_ohlcv($pair, $timeframe, $since, $limit);
         $candles = [];
         foreach ($ohlcvs as $ohlcv) {
             $ticker = new Ticker([
