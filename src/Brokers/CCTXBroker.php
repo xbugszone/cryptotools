@@ -4,7 +4,7 @@ namespace Xbugszone\Cryptotools\Brokers;
 
 use Xbugszone\Cryptotools\Interfaces\BrokerInterface;
 
-class CCTXBroker extends Broker implements BrokerInterface
+class CCTXBroker implements BrokerInterface
 {
 
     /**
@@ -40,14 +40,12 @@ class CCTXBroker extends Broker implements BrokerInterface
      */
     public function __construct()
     {
-
         if (isset($this)) {
             $this->broker = new $this->exchange(array(
                 'apiKey' => $this->apiKey,
                 'secret' => $this->apiSecret,
             ));
         }
-
     }
 
     public function getMarkets() : array {

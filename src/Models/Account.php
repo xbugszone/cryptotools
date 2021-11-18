@@ -2,8 +2,7 @@
 
 namespace Xbugszone\Cryptotools\Models;
 
-
-use Xbugszone\Cryptotools\Brokers\Broker;
+use Xbugszone\Cryptotools\Interfaces\BrokerInterface;
 
 class Account
 {
@@ -27,11 +26,22 @@ class Account
 
     /**
      * Populate the Account with data from the exchange
-     * @param Broker $broker
+     * @param BrokerInterface $broker
      */
-    public function fetchData(Broker $broker) {
+    public function fetchData(BrokerInterface $broker) {
         $this->balance = $broker->getBalance();
         $this->markets = $broker->getMarkets();
         $this->openOrders = $broker->getOpenOrders();
+    }
+
+    public function getValue(string $coin) {
+        return $this->balance[$coin]['free'];
+    }
+
+    public function getAvailablePairs(string $coin): array
+    {
+        return array_filter($this->markets, function($market) use ($coin) {
+           return str_starts_with($market, $coin);
+        });
     }
 }

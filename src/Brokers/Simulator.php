@@ -9,13 +9,13 @@ use Xbugszone\Cryptotools\Interfaces\BrokerInterface;
  * To get the max of the simulation this simulator go get real data from a chosen exchange.
  * The queries will be real data and the actions (getBalance, createOrder, getOpenOrders, etc) will be simulated
  */
-class Simulator extends Broker implements BrokerInterface
+class Simulator implements BrokerInterface
 {
     /**
      * The broker to get real data
-     * @var Broker
+     * @var BrokerInterface
      */
-    protected Broker $broker;
+    protected BrokerInterface $broker;
 
     /**
      * Balance when starting the simulator
@@ -25,9 +25,9 @@ class Simulator extends Broker implements BrokerInterface
 
     /**
      * The exchange Broker
-     * @param Broker $broker
+     * @param BrokerInterface $broker
      */
-    public function setBroker(Broker $broker) {
+    public function setBroker(BrokerInterface $broker) {
         $this->broker = $broker;
     }
 
