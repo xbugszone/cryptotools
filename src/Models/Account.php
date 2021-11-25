@@ -25,23 +25,59 @@ class Account
     protected array $openOrders;
 
     /**
+     * The main coin used for transactions (USD,BTC,EUR)
+     * @var string
+     */
+    public string $tradeCoin;
+
+    /**
+     * The broker to get real data
+     * @var BrokerInterface
+     */
+    protected BrokerInterface $broker;
+
+    /**
      * Populate the Account with data from the exchange
      * @param BrokerInterface $broker
      */
-    public function fetchData(BrokerInterface $broker) {
+    public function fetchData(BrokerInterface $broker) : void {
         $this->balance = $broker->getBalance();
         $this->markets = $broker->getMarkets();
         $this->openOrders = $broker->getOpenOrders();
     }
 
-    public function getValue(string $coin) {
-        return $this->balance[$coin]['free'];
-    }
-
+    /**
+     * Get the market pair available in this broker for this coin
+     * @param string $coin
+     * @return array
+     */
     public function getAvailablePairs(string $coin): array
     {
         return array_filter($this->markets, function($market) use ($coin) {
-           return str_starts_with($market, $coin);
+           return is_numeric(strpos($market, $coin));
         });
+    }
+
+    /**
+     * Populate the Account with data from the exchange
+     * @param string $pair
+     * @param string $type
+     * @param string $side
+     * @param float $amount
+     * @param float $price
+     */
+    public function createOrder(string $pair, string $type, string $side, float $amount, float $price): void
+    {
+        //TODO: check if i have the money to create the order
+        $this->broker->createOrder($pair, $type, $side, $amount, $price);
+        //TODO: update the balance
+    }
+
+    /**
+     * The exchange Broker
+     * @param BrokerInterface $broker
+     */
+    public function setBroker(BrokerInterface $broker) {
+        $this->broker = $broker;
     }
 }

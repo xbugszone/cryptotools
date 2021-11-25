@@ -48,6 +48,9 @@ class CCTXBroker implements BrokerInterface
         }
     }
 
+    /**
+     * @return array
+     */
     public function getMarkets() : array {
         $marketsApi = $this->broker->fetch_markets();
         $listMarkets = [];
@@ -77,21 +80,44 @@ class CCTXBroker implements BrokerInterface
     }
 
     /**
-     * @param $symbol
+     * Get ticker
+     * @param string $pair
      * @return array
      */
-    public function getTicker($pair) : array {
+    public function getTicker(string $pair) : array {
         return $this->broker->fetch_ticker($pair);
     }
+
+    /**
+     * Get open orders
+     * @return array
+     */
     public function getOpenOrders() : array {
         return $this->broker->fetch_open_orders();
     }
 
-    public function createOrder($pair, $type, $side, $amount, $price ) {
-        //print_r($this->exchange->sell($crypto['coin'], 'trade', 'sell', $crypto['value'], $ticker['last']));
+    /**
+     * Create the order
+     * @param string $pair
+     * @param string $type
+     * @param string $side
+     * @param float $amount
+     * @param float $price
+     * @return mixed
+     */
+    public function createOrder(string $pair, string $type, string $side, float $amount, float $price ) {
         return $this->broker->create_order($pair, $type, $side, $amount, $price);
     }
-    public function getTickers($pair,$timeframe,$since,$limit) : array
+
+    /**
+     * Get the tickers
+     * @param string $pair
+     * @param string $timeframe
+     * @param string $since
+     * @param int $limit
+     * @return array
+     */
+    public function getTickers(string $pair,string $timeframe,string $since, int $limit) : array
     {
         $ohlcvs = $this->broker->fetch_ohlcv($pair, $timeframe, $since, $limit);
         $candles = [];
@@ -103,6 +129,7 @@ class CCTXBroker implements BrokerInterface
                 "high" => $ohlcv[2],
                 "low" => $ohlcv[3],
                 "close" => $ohlcv[4],
+                'volume' => $ohlcv[5],
             ];
             $candles[] = $ticker;
         }

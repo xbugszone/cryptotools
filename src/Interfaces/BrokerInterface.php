@@ -6,9 +6,9 @@ interface BrokerInterface
 {
     public function getBalance() : array;
     public function getMarkets() : array;
-    public function getTicker($pair) : array;
-    public function getTickers($pair,$timeframe,$since,$limit) : array;
+    public function getTicker(string $pair) : array;
+    public function getTickers(string $pair, string $timeframe,string $since,int $limit) : array;
     public function getOpenOrders() : array;
-    public function createOrder($pair, $type, $side, $amount, $price );
+    public function createOrder(string $pair, string $type, string $side, float $amount, float $price );
 
 }
