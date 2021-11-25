@@ -33,7 +33,7 @@ class Simulator implements BrokerInterface
 
     public function getBalance(): array
     {
-        return $this->balance;
+        return $this->broker->getBalance();
     }
 
     public function getMarkets(): array
