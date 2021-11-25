@@ -1,10 +1,11 @@
 <?php
 
-namespace Xbugszone\Cryptotools\Models;
+namespace Xbugszone\Cryptotools\Accounts;
 
+use Xbugszone\Cryptotools\Interfaces\AccountInterface;
 use Xbugszone\Cryptotools\Interfaces\BrokerInterface;
 
-class Account
+class User implements AccountInterface
 {
     /**
      * Array with coins and values
@@ -37,7 +38,15 @@ class Account
     protected BrokerInterface $broker;
 
     /**
-     * Populate the Account with data from the exchange
+     * The exchange Broker
+     * @param BrokerInterface $broker
+     */
+    public function setBroker(BrokerInterface $broker): void {
+        $this->broker = $broker;
+    }
+
+    /**
+     * Populate the User with data from the exchange
      * @param BrokerInterface $broker
      */
     public function fetchData(BrokerInterface $broker) : void {
@@ -59,25 +68,37 @@ class Account
     }
 
     /**
-     * Populate the Account with data from the exchange
+     * Populate the User with data from the exchange
      * @param string $pair
      * @param string $type
      * @param string $side
      * @param float $amount
      * @param float $price
      */
-    public function createOrder(string $pair, string $type, string $side, float $amount, float $price): void
+    public function createOrder(string $pair, string $type, string $side, float $amount, float $price): bool
     {
-        //TODO: check if i have the money to create the order
+        list($buyCoin, $sellCoin) = explode('/',$pair);
+        if($this->balance[$sellCoin]['free'] > $amount*$price) {
+            return false;
+        }
         $this->broker->createOrder($pair, $type, $side, $amount, $price);
-        //TODO: update the balance
+        $this->setBalance(
+            $sellCoin,
+            $this->balance[$sellCoin]['free'] -($amount*$price),
+            $this->balance[$sellCoin]['used'] +($amount*$price)
+        );
+        return true;
     }
 
     /**
-     * The exchange Broker
-     * @param BrokerInterface $broker
+     * Update Value
+     * @param string $coin
+     * @param float $freeValue
+     * @param float $usedValue
      */
-    public function setBroker(BrokerInterface $broker) {
-        $this->broker = $broker;
+    private function setBalance(string $coin, float $freeValue, float $usedValue): void {
+        $this->balance[$coin]['free'] = $freeValue;
+        $this->balance[$coin]['used'] = $usedValue;
+        $this->balance[$coin]['total'] = $freeValue + $usedValue;
     }
 }
