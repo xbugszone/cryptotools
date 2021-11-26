@@ -3,9 +3,12 @@
 namespace Xbugszone\Cryptotools\Brokers;
 
 use Xbugszone\Cryptotools\Interfaces\BrokerInterface;
+use Xbugszone\Cryptotools\Traits\Broker;
 
-class CCTXBroker extends Broker
+class CCTXBroker implements BrokerInterface
 {
+    use Broker;
+
     /**
      * Get open orders
      * @return array
