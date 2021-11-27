@@ -50,10 +50,9 @@ class Analyser
 
     /**
      * Get the change
-     * @param array $ticker
      * @return float %
      */
-    public function getChange(array $ticker) : float {
+    public function getChange() : float {
         return $this->getDiff()/($this->getAvg()/100);
     }
 
